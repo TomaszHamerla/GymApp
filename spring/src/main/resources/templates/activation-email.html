@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Aktywacja konta</title>
+</head>
+<body>
+    <h1>Witaj w naszej aplikacji!</h1>
+    <p>Kliknij poniższy link, aby aktywować swoje konto:</p>
+    <a th:href="${activationLink}" th:text="${activationLink}">Aktywuj konto</a>
+    <p>Dziękujemy!</p>
+</body>
+</html>

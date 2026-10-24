@@ -21,8 +21,7 @@ public class EmailService {
     public void sendActivationEmail(String to, String token) {
         try {
             Context context = new Context();
-            String activationLink = "http://localhost:8080/activate?token=" + token;
-            context.setVariable("activationLink", activationLink);
+            context.setVariable("token", token);
 
             String process = templateEngine.process("activation-email", context);
 
@@ -32,10 +31,10 @@ public class EmailService {
             helper.setText(process, true);
             helper.setTo(to);
             helper.setSubject("Aktywacja konta na siłowni");
-            helper.setFrom("no-reply@gym.com");
+            helper.setFrom("javaprojectmeil@gmail.com", "gymTrack-noreply");
 
             javaMailSender.send(mimeMessage);
-        } catch (MessagingException e) {
+        } catch (MessagingException | java.io.UnsupportedEncodingException e) {
             throw new IllegalStateException("Failed to send email");
         }
     }

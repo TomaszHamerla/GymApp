@@ -2,11 +2,94 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Aktywacja konta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background-color: #0056b3;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            padding: 30px;
+            text-align: center;
+        }
+        .content p {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        .token-box {
+            background-color: #f9f9f9;
+            border: 1px dashed #0056b3;
+            padding: 15px;
+            font-size: 18px;
+            font-family: monospace;
+            word-break: break-all;
+            color: #0056b3;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            display: inline-block;
+            user-select: all;
+        }
+        .copy-btn {
+            background-color: #28a745;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .copy-btn:hover {
+            background-color: #218838;
+        }
+        .footer {
+            background-color: #f4f4f4;
+            color: #777777;
+            padding: 15px;
+            text-align: center;
+            font-size: 12px;
+            border-top: 1px solid #dddddd;
+        }
+    </style>
 </head>
 <body>
-    <h1>Witaj w naszej aplikacji!</h1>
-    <p>Kliknij poniższy link, aby aktywować swoje konto:</p>
-    <a th:href="${activationLink}" th:text="${activationLink}">Aktywuj konto</a>
-    <p>Dziękujemy!</p>
+    <div class="container">
+        <div class="header">
+            <h1>Witaj w naszej aplikacji!</h1>
+        </div>
+        <div class="content">
+            <p>Dziękujemy za rejestrację. Poniżej znajduje się Twój token aktywacyjny. Skopiuj go i wklej w odpowiednie miejsce w aplikacji, aby aktywować swoje konto:</p>
+
+            <div class="token-box" id="token" th:text="${token}">TWOJ_TOKEN_TUTAJ</div>
+
+            <p style="margin-top: 30px;">Dziękujemy!</p>
+        </div>
+        <div class="footer">
+            &copy; 2023 gymTrack. Wszelkie prawa zastrzeżone.
+        </div>
+    </div>
 </body>
 </html>

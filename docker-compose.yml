@@ -14,19 +14,6 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  app:
-    build:
-      context: ./spring
-      dockerfile: Dockerfile
-    container_name: spring_app
-    ports:
-      - "8080:8080"
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/spring_db
-      - SPRING_DATASOURCE_USERNAME=spring_user
-      - SPRING_DATASOURCE_PASSWORD=spring_password
-    depends_on:
-      - db
 
 volumes:
   postgres_data:

@@ -4,14 +4,16 @@ import { environment } from '../../../environments/environment';
 import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private apiUrl = environment.apiUrl;
+  private tokenKey = 'token';
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private cookieService: CookieService) {}
 
   register(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, data, { responseType: 'text' });
@@ -25,19 +27,20 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/login`, data).pipe(
       tap((res: any) => {
         if (res && res.token) {
-          localStorage.setItem('token', res.token);
+          this.cookieService.set(this.tokenKey, res.token, 1, '/'); // 1 day expiration
         }
       })
     );
   }
 
   logout() {
-    localStorage.removeItem('token');
+    this.cookieService.delete(this.tokenKey, '/');
     this.router.navigate(['/login']);
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    const token = this.cookieService.get(this.tokenKey);
+    return token ? token : null;
   }
 
   isLoggedIn(): boolean {

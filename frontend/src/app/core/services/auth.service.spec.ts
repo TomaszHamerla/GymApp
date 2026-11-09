@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { routes } from '../../app.routes';
+import { CookieService } from 'ngx-cookie-service';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -11,7 +12,8 @@ describe('AuthService', () => {
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(),
-        provideRouter(routes)
+        provideRouter(routes),
+        CookieService
       ]
     });
     service = TestBed.inject(AuthService);

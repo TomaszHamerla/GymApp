@@ -1,0 +1,13 @@
+<div class="flex items-center justify-center min-h-[calc(100vh-64px)]">
+  <div class="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md text-center">
+    <h2 class="text-2xl font-bold text-gray-800">Account Activation</h2>
+    <div [ngClass]="{'text-green-600': success, 'text-red-600': !success}" class="font-medium">
+      {{ message }}
+    </div>
+    <div class="mt-6">
+      <a routerLink="/login">
+        <button pButton label="Go to Login" class="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700"></button>
+      </a>
+    </div>
+  </div>
+</div>

@@ -28,12 +28,12 @@ export class AuthService {
   }
 
   /**
-   * GET /activate?token=...
+   * GET /api/activate?token=...
    * Activates a user account via email activation token.
    * @returns message string on success
    */
   activate(token: string): Observable<string> {
-    return this.http.get(`${this.apiUrl}/activate`, {
+    return this.http.get(`${this.apiUrl}/api/activate`, {
       params: { token },
       responseType: 'text'
     });

@@ -48,6 +48,14 @@
   width: 100%;
 }
 
+.activation-hint {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #64748b;
+  line-height: 1.4;
+  text-align: center;
+}
+
 :host ::ng-deep {
   .p-card {
     border-radius: 12px;

@@ -1,0 +1,51 @@
+<div class="activate-container">
+  <div class="activate-card-wrapper">
+    <div class="activate-brand">
+      <i class="pi pi-bolt brand-icon"></i>
+      <h1>GymApp</h1>
+    </div>
+
+    <p-card styleClass="activate-card">
+      <!-- LOADING STATE -->
+      <div *ngIf="state === 'loading'" class="state-box loading">
+        <p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="4" />
+        <h2>Trwa aktywacja konta...</h2>
+        <p>Weryfikujemy Twój token aktywacyjny, prosimy o chwilę cierpliwości.</p>
+      </div>
+
+      <!-- SUCCESS STATE -->
+      <div *ngIf="state === 'success'" class="state-box success">
+        <div class="icon-circle success-circle">
+          <i class="pi pi-check"></i>
+        </div>
+        <h2>Konto aktywowane!</h2>
+        <p class="status-message">{{ message }}</p>
+        <p class="status-hint">Możesz się teraz zalogować i rozpocząć planowanie swoich treningów.</p>
+
+        <p-button
+          label="Przejdź do logowania"
+          icon="pi pi-sign-in"
+          severity="success"
+          (onClick)="goToLogin()"
+          styleClass="w-full action-btn" />
+      </div>
+
+      <!-- ERROR STATE -->
+      <div *ngIf="state === 'error'" class="state-box error">
+        <div class="icon-circle error-circle">
+          <i class="pi pi-times"></i>
+        </div>
+        <h2>Aktywacja nie powiodła się</h2>
+        <p class="status-message error-text">{{ errorMessage }}</p>
+        <p class="status-hint">Jeśli konto zostało już aktywowane, możesz od razu przejść do logowania.</p>
+
+        <p-button
+          label="Przejdź do logowania"
+          icon="pi pi-arrow-left"
+          severity="secondary"
+          (onClick)="goToLogin()"
+          styleClass="w-full action-btn" />
+      </div>
+    </p-card>
+  </div>
+</div>

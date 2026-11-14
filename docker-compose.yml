@@ -1,19 +1,38 @@
 version: '3.8'
 
 services:
-  db:
-    image: postgres:15-alpine
-    container_name: postgres_db
-    restart: always
-    environment:
-      POSTGRES_DB: spring_db
-      POSTGRES_USER: spring_user
-      POSTGRES_PASSWORD: spring_password
+  # Spring Boot Backend
+  spring:
+    build:
+      context: ./spring
+      dockerfile: Dockerfile
+    container_name: gymapp_spring
+    restart: unless-stopped
     ports:
-      - "5433:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/spring_db
+      SPRING_DATASOURCE_USERNAME: spring_user
+      SPRING_DATASOURCE_PASSWORD: spring_password
+      APP_FRONTEND_URL: http://localhost
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - gymapp-net
 
+  angular:
+    build:
+      context: ./angular
+      dockerfile: Dockerfile
+    container_name: gymapp_angular
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    depends_on:
+      - spring
+    networks:
+      - gymapp-net
 
-volumes:
-  postgres_data:
+networks:
+  gymapp-net:
+    driver: bridge

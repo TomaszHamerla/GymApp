@@ -27,49 +27,49 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Map<String, String>> handleBadCredentialsException(BadCredentialsException e) {
         Map<String, String> response = new HashMap<>();
-        response.put("error", "Invalid email or password");
+        response.put("error", "Nieprawidłowy adres email lub hasło");
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(DisabledException.class)
     public ResponseEntity<Map<String, String>> handleDisabledException(DisabledException e) {
         Map<String, String> response = new HashMap<>();
-        response.put("error", "Account not activated");
+        response.put("error", "Konto nie zostało jeszcze aktywowane. Sprawdź swoją skrzynkę e-mail.");
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Map<String, String>> handleAuthenticationException(AuthenticationException e) {
         Map<String, String> response = new HashMap<>();
-        response.put("error", "Unauthorized - Please provide valid credentials");
+        response.put("error", "Brak autoryzacji - podaj poprawne dane logowania");
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleUsernameNotFoundException(UsernameNotFoundException e) {
         Map<String, String> response = new HashMap<>();
-        response.put("error", "User not found or deleted");
+        response.put("error", "Użytkownik nie został odnaleziony");
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Map<String, String>> handleAccessDeniedException(AccessDeniedException e) {
         Map<String, String> response = new HashMap<>();
-        response.put("error", "Access Denied - You do not have permission to access this resource");
+        response.put("error", "Brak uprawnień do tego zasobu");
         return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<Map<String, String>> handleNoHandlerFoundException(NoHandlerFoundException e) {
         Map<String, String> response = new HashMap<>();
-        response.put("error", "Resource not found");
+        response.put("error", "Żądany zasób nie został odnaleziony");
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleGeneralException(Exception e) {
         Map<String, String> response = new HashMap<>();
-        response.put("error", "An unexpected error occurred");
+        response.put("error", "Wystąpił nieoczekiwany błąd serwera");
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

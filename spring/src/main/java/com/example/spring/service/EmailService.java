@@ -3,6 +3,7 @@ package com.example.spring.service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -17,11 +18,16 @@ public class EmailService {
     private final JavaMailSender javaMailSender;
     private final TemplateEngine templateEngine;
 
+    @Value("${app.frontend.url:http://localhost:4200}")
+    private String frontendUrl;
+
     @Async
     public void sendActivationEmail(String to, String token) {
         try {
             Context context = new Context();
+            String activationLink = frontendUrl + "/activate?token=" + token;
             context.setVariable("token", token);
+            context.setVariable("activationLink", activationLink);
 
             String process = templateEngine.process("activation-email", context);
 

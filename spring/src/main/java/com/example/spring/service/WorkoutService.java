@@ -24,10 +24,10 @@ public class WorkoutService {
     public WorkoutResponse addWorkout(WorkoutRequest request) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Nie odnaleziono użytkownika"));
 
         Exercise exercise = exerciseRepository.findById(request.getExerciseId())
-                .orElseThrow(() -> new IllegalArgumentException("Exercise not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Nie odnaleziono wybranego ćwiczenia"));
 
         Workout workout = Workout.builder()
                 .user(user)
@@ -45,11 +45,11 @@ public class WorkoutService {
     public WorkoutResponse getLatestWorkout() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Nie odnaleziono użytkownika"));
 
         return workoutRepository.findFirstByUserOrderByCreatedAtDesc(user)
                 .map(this::mapToResponse)
-                .orElseThrow(() -> new IllegalArgumentException("No workouts found for user"));
+                .orElseThrow(() -> new IllegalArgumentException("Brak zapisanych treningów dla tego użytkownika"));
     }
 
     private WorkoutResponse mapToResponse(Workout workout) {

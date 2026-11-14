@@ -53,12 +53,27 @@ export class AuthComponent {
     private router: Router
   ) {}
 
+  private extractErrorMessage(err: any, fallback: string): string {
+    if (err?.error) {
+      if (typeof err.error === 'string') {
+        return err.error;
+      }
+      if (err.error.error) {
+        return err.error.error;
+      }
+      if (err.error.message) {
+        return err.error.message;
+      }
+    }
+    return fallback;
+  }
+
   onLogin(): void {
     if (!this.loginEmail || !this.loginPassword) {
       this.messageService.add({
         severity: 'warn',
         summary: 'Uwaga',
-        detail: 'Wypełnij wszystkie pola'
+        detail: 'Podaj adres e-mail oraz hasło'
       });
       return;
     }
@@ -74,16 +89,20 @@ export class AuthComponent {
         this.messageService.add({
           severity: 'success',
           summary: 'Sukces',
-          detail: 'Zalogowano pomyślnie!'
+          detail: 'Zalogowano pomyślnie! Przekierowywanie...'
         });
         setTimeout(() => this.router.navigate(['/dashboard']), 1000);
       },
       error: (err) => {
         this.loginLoading = false;
+        const detailMsg = this.extractErrorMessage(
+          err,
+          'Nieprawidłowy adres e-mail lub hasło (upewnij się, że konto zostało aktywowane przez e-mail).'
+        );
         this.messageService.add({
           severity: 'error',
           summary: 'Błąd logowania',
-          detail: err.error?.message || err.error || 'Nieprawidłowy email lub hasło'
+          detail: detailMsg
         });
       }
     });
@@ -94,7 +113,7 @@ export class AuthComponent {
       this.messageService.add({
         severity: 'warn',
         summary: 'Uwaga',
-        detail: 'Wypełnij wszystkie pola'
+        detail: 'Wypełnij wszystkie wymagane pola formularza'
       });
       return;
     }
@@ -102,8 +121,8 @@ export class AuthComponent {
     if (this.registerPassword !== this.registerConfirmPassword) {
       this.messageService.add({
         severity: 'error',
-        summary: 'Błąd',
-        detail: 'Hasła nie są identyczne'
+        summary: 'Błąd walidacji',
+        detail: 'Wprowadzone hasła nie są identyczne'
       });
       return;
     }
@@ -115,24 +134,29 @@ export class AuthComponent {
     };
 
     this.authService.register(request).subscribe({
-      next: (message) => {
+      next: (backendMsg) => {
         this.registerLoading = false;
         this.messageService.add({
           severity: 'success',
-          summary: 'Rejestracja udana',
-          detail: message
+          summary: 'Rejestracja udana!',
+          detail: backendMsg || 'Twoje konto zostało utworzone! Wysłaliśmy e-mail z linkiem aktywacyjnym. Kliknij w niego, aby aktywować konto.'
         });
+        this.loginEmail = this.registerEmail;
         this.registerEmail = '';
         this.registerPassword = '';
         this.registerConfirmPassword = '';
-        this.activeTabIndex = 0;
+        this.activeTabIndex = 0; // Przełącz na zakładkę logowania
       },
       error: (err) => {
         this.registerLoading = false;
+        const detailMsg = this.extractErrorMessage(
+          err,
+          'Nie udało się zarejestrować konta. Spróbuj ponownie później.'
+        );
         this.messageService.add({
           severity: 'error',
           summary: 'Błąd rejestracji',
-          detail: err.error?.message || err.error || 'Nie udało się zarejestrować'
+          detail: detailMsg
         });
       }
     });

@@ -24,7 +24,7 @@ public class AuthService {
 
     public void register(RegisterRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("User with this email already exists");
+            throw new IllegalArgumentException("Użytkownik o podanym adresie email już istnieje");
         }
 
         var user = User.builder()
@@ -41,17 +41,17 @@ public class AuthService {
     public void activate(String token) {
         String email = jwtService.extractUsername(token);
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid token or user not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Nieprawidłowy token lub nie odnaleziono użytkownika"));
 
         if (user.isEnabled()) {
-            throw new IllegalArgumentException("User is already activated");
+            throw new IllegalArgumentException("Konto zostało już wcześniej aktywowane");
         }
 
         if (jwtService.isTokenValid(token, user)) {
             user.setEnabled(true);
             userRepository.save(user);
         } else {
-            throw new IllegalArgumentException("Invalid token");
+            throw new IllegalArgumentException("Nieprawidłowy lub wygasły token aktywacyjny");
         }
     }
 
@@ -63,10 +63,10 @@ public class AuthService {
                 )
         );
         var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+                .orElseThrow(() -> new IllegalArgumentException("Nieprawidłowy adres email lub hasło"));
 
         if (!user.isEnabled()) {
-            throw new IllegalArgumentException("Account not activated");
+            throw new IllegalArgumentException("Konto nie zostało jeszcze aktywowane. Sprawdź swoją skrzynkę e-mail.");
         }
 
         var jwtToken = jwtService.generateToken(user);

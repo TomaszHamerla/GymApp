@@ -17,13 +17,13 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
         authService.register(request);
-        return ResponseEntity.ok("User registered successfully. Check your email to activate your account.");
+        return ResponseEntity.ok("Rejestracja zakończona pomyślnie. Sprawdź swoją skrzynkę e-mail, aby aktywować konto.");
     }
 
     @GetMapping("/activate")
     public ResponseEntity<String> activate(@RequestParam String token) {
         authService.activate(token);
-        return ResponseEntity.ok("Account activated successfully.");
+        return ResponseEntity.ok("Konto zostało pomyślnie aktywowane.");
     }
 
     @PostMapping("/login")

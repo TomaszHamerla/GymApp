@@ -1,6 +1,8 @@
-<p-toolbar>
+<p-toast position="bottom-center" />
+
+<p-toolbar styleClass="dashboard-toolbar">
   <div class="p-toolbar-group-start">
-    <i class="pi pi-bolt" style="font-size: 1.5rem; margin-right: 0.5rem;"></i>
+    <i class="pi pi-bolt brand-icon"></i>
     <span class="app-title">GymApp</span>
   </div>
   <div class="p-toolbar-group-end">
@@ -13,8 +15,115 @@
   </div>
 </p-toolbar>
 
-<div class="dashboard-content">
-  <p-card header="Witaj w GymApp! 💪">
-    <p>Dashboard jest gotowy do rozbudowy.</p>
-  </p-card>
+<div class="dashboard-container">
+  <div class="dashboard-grid">
+    <!-- ADD WORKOUT CARD -->
+    <p-card header="Dodaj nowy trening" subheader="Zarejestruj wykonaną serię ćwiczeń" styleClass="card-workout">
+      <div class="form-container">
+        <div class="form-field">
+          <label for="exercise-select" class="form-label">Ćwiczenie</label>
+          <p-dropdown
+            id="exercise-select"
+            [options]="exercises"
+            [(ngModel)]="selectedExerciseId"
+            optionLabel="name"
+            optionValue="id"
+            placeholder="Wybierz ćwiczenie"
+            styleClass="w-full" />
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="sets-input" class="form-label">Serie (sets)</label>
+            <p-inputNumber
+              id="sets-input"
+              [(ngModel)]="sets"
+              [min]="1"
+              [max]="50"
+              [showButtons]="true"
+              styleClass="w-full"
+              inputStyleClass="w-full" />
+          </div>
+
+          <div class="form-field">
+            <label for="reps-input" class="form-label">Powtórzenia (reps)</label>
+            <p-inputNumber
+              id="reps-input"
+              [(ngModel)]="reps"
+              [min]="1"
+              [max]="200"
+              [showButtons]="true"
+              styleClass="w-full"
+              inputStyleClass="w-full" />
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="weight-input" class="form-label">Ciężar (kg)</label>
+          <p-inputNumber
+            id="weight-input"
+            [(ngModel)]="weight"
+            [min]="0"
+            [max]="1000"
+            [step]="2.5"
+            [minFractionDigits]="0"
+            [maxFractionDigits]="1"
+            suffix=" kg"
+            [showButtons]="true"
+            styleClass="w-full"
+            inputStyleClass="w-full" />
+        </div>
+
+        <p-button
+          label="Zapisz trening"
+          icon="pi pi-check"
+          (onClick)="onSaveWorkout()"
+          [loading]="savingWorkout"
+          styleClass="w-full"
+          severity="primary" />
+      </div>
+    </p-card>
+
+    <!-- LATEST WORKOUT CARD -->
+    <p-card header="Ostatni trening" subheader="Podsumowanie ostatniej aktywności" styleClass="card-latest">
+      <div *ngIf="loadingData" class="center-content">
+        <p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="4" />
+      </div>
+
+      <div *ngIf="!loadingData && latestWorkout" class="latest-workout-details">
+        <div class="exercise-badge">
+          <i class="pi pi-bookmark"></i>
+          <h3>{{ latestWorkout.exercise.name }}</h3>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-box">
+            <span class="stat-value">{{ latestWorkout.sets }}</span>
+            <span class="stat-label">Serie</span>
+          </div>
+
+          <div class="stat-box">
+            <span class="stat-value">{{ latestWorkout.reps }}</span>
+            <span class="stat-label">Powtórzenia</span>
+          </div>
+
+          <div class="stat-box highlight">
+            <span class="stat-value">{{ latestWorkout.weight }} kg</span>
+            <span class="stat-label">Ciężar</span>
+          </div>
+        </div>
+
+        <div class="date-footer" *ngIf="latestWorkout.createdAt">
+          <i class="pi pi-calendar"></i>
+          <span>Data: {{ latestWorkout.createdAt | date:'dd.MM.yyyy HH:mm' }}</span>
+        </div>
+      </div>
+
+      <div *ngIf="!loadingData && noLatestWorkout" class="empty-state">
+        <i class="pi pi-info-circle empty-icon"></i>
+        <p>Brak zapisanych treningów.</p>
+        <small>Dodaj swój pierwszy trening za pomocą formularza po lewej stronie!</small>
+      </div>
+    </p-card>
+  </div>
 </div>

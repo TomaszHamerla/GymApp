@@ -1,0 +1,106 @@
+<p-toast />
+
+<div class="auth-container">
+  <div class="auth-card-wrapper">
+    <div class="auth-header">
+      <i class="pi pi-bolt auth-icon"></i>
+      <h1>GymApp</h1>
+      <p>Twój osobisty tracker treningów</p>
+    </div>
+
+    <p-card>
+      <p-tabView [(activeIndex)]="activeTabIndex">
+        <!-- LOGIN TAB -->
+        <p-tabPanel header="Logowanie" leftIcon="pi pi-sign-in">
+          <div class="form-container">
+            <div class="field">
+              <p-floatLabel>
+                <input
+                  pInputText
+                  id="login-email"
+                  type="email"
+                  [(ngModel)]="loginEmail"
+                  (keydown.enter)="onLogin()"
+                  class="w-full" />
+                <label for="login-email">Email</label>
+              </p-floatLabel>
+            </div>
+
+            <div class="field">
+              <p-floatLabel>
+                <p-password
+                  id="login-password"
+                  [(ngModel)]="loginPassword"
+                  [feedback]="false"
+                  [toggleMask]="true"
+                  (keydown.enter)="onLogin()"
+                  styleClass="w-full"
+                  inputStyleClass="w-full" />
+                <label for="login-password">Hasło</label>
+              </p-floatLabel>
+            </div>
+
+            <p-button
+              label="Zaloguj się"
+              icon="pi pi-sign-in"
+              (onClick)="onLogin()"
+              [loading]="loginLoading"
+              styleClass="w-full"
+              severity="primary" />
+          </div>
+        </p-tabPanel>
+
+        <!-- REGISTER TAB -->
+        <p-tabPanel header="Rejestracja" leftIcon="pi pi-user-plus">
+          <div class="form-container">
+            <div class="field">
+              <p-floatLabel>
+                <input
+                  pInputText
+                  id="register-email"
+                  type="email"
+                  [(ngModel)]="registerEmail"
+                  class="w-full" />
+                <label for="register-email">Email</label>
+              </p-floatLabel>
+            </div>
+
+            <div class="field">
+              <p-floatLabel>
+                <p-password
+                  id="register-password"
+                  [(ngModel)]="registerPassword"
+                  [toggleMask]="true"
+                  styleClass="w-full"
+                  inputStyleClass="w-full" />
+                <label for="register-password">Hasło</label>
+              </p-floatLabel>
+            </div>
+
+            <div class="field">
+              <p-floatLabel>
+                <p-password
+                  id="register-confirm-password"
+                  [(ngModel)]="registerConfirmPassword"
+                  [feedback]="false"
+                  [toggleMask]="true"
+                  (keydown.enter)="onRegister()"
+                  styleClass="w-full"
+                  inputStyleClass="w-full" />
+                <label for="register-confirm-password">Powtórz hasło</label>
+              </p-floatLabel>
+            </div>
+
+            <p-button
+              label="Zarejestruj się"
+              icon="pi pi-user-plus"
+              (onClick)="onRegister()"
+              [loading]="registerLoading"
+              styleClass="w-full"
+              severity="primary" />
+          </div>
+        </p-tabPanel>
+      </p-tabView>
+    </p-card>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+name: Deploy_production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build and push to GHCR
+        run: |
+          OWNER_LC=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+          docker build -t ghcr.io/$OWNER_LC/gymapp-spring:latest ./spring
+          docker build -t ghcr.io/$OWNER_LC/gymapp-angular:latest ./angular
+
+          docker push ghcr.io/$OWNER_LC/gymapp-spring:latest
+          docker push ghcr.io/$OWNER_LC/gymapp-angular:latest

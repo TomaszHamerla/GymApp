@@ -53,23 +53,23 @@ export class AuthService {
   }
 
   /**
-   * POST /forgot-password
+   * POST /api/forgot-password
    * Sends a password reset link to user's email.
    * @returns message string on success
    */
   forgotPassword(email: string): Observable<string> {
-    return this.http.post(`${this.apiUrl}/forgot-password`, { email }, {
+    return this.http.post(`${this.apiUrl}/api/forgot-password`, { email }, {
       responseType: 'text'
     });
   }
 
   /**
-   * POST /reset-password
+   * POST /api/reset-password
    * Resets the user's password using the token.
    * @returns message string on success
    */
   resetPassword(request: ResetPasswordRequest): Observable<string> {
-    return this.http.post(`${this.apiUrl}/reset-password`, request, {
+    return this.http.post(`${this.apiUrl}/api/reset-password`, request, {
       responseType: 'text'
     });
   }

@@ -1,8 +1,8 @@
 name: Deploy_production
 
 on:
-  # push:
-  #   branches: [main]
+  push:
+    branches: [main]
   workflow_dispatch:
 
 concurrency:
@@ -33,3 +33,16 @@ jobs:
 
           docker push ghcr.io/$OWNER_LC/gymapp-spring:latest
           docker push ghcr.io/$OWNER_LC/gymapp-angular:latest
+
+  deploy:
+    name: Deploy to VPS
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger deploy script on VPS
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          eval $(ssh-agent -s)
+          ssh-add - <<< "$SSH_KEY"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "/usr/local/bin/deploy.sh"

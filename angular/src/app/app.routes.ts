@@ -14,6 +14,11 @@ export const routes: Routes = [
       import('./pages/activate/activate.component').then(m => m.ActivateComponent)
   },
   {
+    path: 'reset-password',
+    loadComponent: () =>
+      import('./pages/reset-password/reset-password.component').then(m => m.ResetPasswordComponent)
+  },
+  {
     path: 'dashboard',
     loadComponent: () =>
       import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),

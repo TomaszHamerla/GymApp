@@ -1,8 +1,10 @@
 package com.example.spring.service;
 
 import com.example.spring.dto.AuthResponse;
+import com.example.spring.dto.ForgotPasswordRequest;
 import com.example.spring.dto.LoginRequest;
 import com.example.spring.dto.RegisterRequest;
+import com.example.spring.dto.ResetPasswordRequest;
 import com.example.spring.model.User;
 import com.example.spring.repository.UserRepository;
 import com.example.spring.security.JwtService;
@@ -11,6 +13,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -73,5 +78,45 @@ public class AuthService {
         return AuthResponse.builder()
                 .token(jwtToken)
                 .build();
+    }
+
+    public void forgotPassword(ForgotPasswordRequest request) {
+        if (request.getEmail() == null || request.getEmail().isBlank()) {
+            throw new IllegalArgumentException("Adres e-mail jest wymagany");
+        }
+
+        User user = userRepository.findByEmail(request.getEmail().trim())
+                .orElseThrow(() -> new IllegalArgumentException("Użytkownik o podanym adresie e-mail nie istnieje"));
+
+        String token = UUID.randomUUID().toString();
+        user.setResetPasswordToken(token);
+        user.setResetPasswordTokenExpiry(LocalDateTime.now().plusHours(1));
+        userRepository.save(user);
+
+        emailService.sendPasswordResetEmail(user.getEmail(), token);
+    }
+
+    public void resetPassword(ResetPasswordRequest request) {
+        if (request.getToken() == null || request.getToken().isBlank()) {
+            throw new IllegalArgumentException("Token resetowania hasła jest wymagany");
+        }
+        if (request.getNewPassword() == null || request.getNewPassword().isBlank()) {
+            throw new IllegalArgumentException("Nowe hasło nie może być puste");
+        }
+        if (request.getNewPassword().length() < 6) {
+            throw new IllegalArgumentException("Nowe hasło musi mieć co najmniej 6 znaków");
+        }
+
+        User user = userRepository.findByResetPasswordToken(request.getToken())
+                .orElseThrow(() -> new IllegalArgumentException("Nieprawidłowy lub przedawniony token do resetowania hasła"));
+
+        if (user.getResetPasswordTokenExpiry() == null || user.getResetPasswordTokenExpiry().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Link do resetowania hasła wygasł. Poproś o nowy link.");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        user.setResetPasswordToken(null);
+        user.setResetPasswordTokenExpiry(null);
+        userRepository.save(user);
     }
 }

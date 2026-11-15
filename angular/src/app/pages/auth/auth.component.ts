@@ -12,6 +12,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { DividerModule } from 'primeng/divider';
 import { FloatLabelModule } from 'primeng/floatlabel';
+import { DialogModule } from 'primeng/dialog';
 
 import { AuthService } from '../../services';
 import { LoginRequest, RegisterRequest } from '../../models';
@@ -29,7 +30,8 @@ import { LoginRequest, RegisterRequest } from '../../models';
     TabViewModule,
     ToastModule,
     DividerModule,
-    FloatLabelModule
+    FloatLabelModule,
+    DialogModule
   ],
   providers: [MessageService],
   templateUrl: './auth.component.html',
@@ -46,6 +48,10 @@ export class AuthComponent {
   registerPassword = '';
   registerConfirmPassword = '';
   registerLoading = false;
+
+  showForgotPasswordDialog = false;
+  forgotEmail = '';
+  forgotLoading = false;
 
   constructor(
     private authService: AuthService,
@@ -156,6 +162,48 @@ export class AuthComponent {
         this.messageService.add({
           severity: 'error',
           summary: 'Błąd rejestracji',
+          detail: detailMsg
+        });
+      }
+    });
+  }
+
+  openForgotPasswordDialog(): void {
+    this.forgotEmail = this.loginEmail || '';
+    this.showForgotPasswordDialog = true;
+  }
+
+  onSendResetLink(): void {
+    const email = this.forgotEmail?.trim();
+    if (!email) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Uwaga',
+        detail: 'Wprowadź adres e-mail'
+      });
+      return;
+    }
+
+    this.forgotLoading = true;
+    this.authService.forgotPassword(email).subscribe({
+      next: (msg) => {
+        this.forgotLoading = false;
+        this.showForgotPasswordDialog = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Link wysłany',
+          detail: msg || 'Link do zresetowania hasła został wysłany na Twój adres e-mail.'
+        });
+      },
+      error: (err) => {
+        this.forgotLoading = false;
+        const detailMsg = this.extractErrorMessage(
+          err,
+          'Nie udało się wysłać linku do resetowania hasła. Upewnij się, że podany adres e-mail jest zarejestrowany.'
+        );
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Błąd resetowania hasła',
           detail: detailMsg
         });
       }

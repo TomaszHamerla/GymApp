@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { LoginRequest, RegisterRequest, AuthResponse } from '../models';
+import { LoginRequest, RegisterRequest, AuthResponse, ResetPasswordRequest } from '../models';
 import { TokenService } from './token.service';
 
 @Injectable({
@@ -50,6 +50,28 @@ export class AuthService {
         this.tokenService.setToken(response.token);
       })
     );
+  }
+
+  /**
+   * POST /forgot-password
+   * Sends a password reset link to user's email.
+   * @returns message string on success
+   */
+  forgotPassword(email: string): Observable<string> {
+    return this.http.post(`${this.apiUrl}/forgot-password`, { email }, {
+      responseType: 'text'
+    });
+  }
+
+  /**
+   * POST /reset-password
+   * Resets the user's password using the token.
+   * @returns message string on success
+   */
+  resetPassword(request: ResetPasswordRequest): Observable<string> {
+    return this.http.post(`${this.apiUrl}/reset-password`, request, {
+      responseType: 'text'
+    });
   }
 
   /**

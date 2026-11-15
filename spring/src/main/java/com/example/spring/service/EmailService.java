@@ -44,4 +44,28 @@ public class EmailService {
             throw new IllegalStateException("Failed to send email");
         }
     }
+
+    @Async
+    public void sendPasswordResetEmail(String to, String token) {
+        try {
+            Context context = new Context();
+            String resetLink = frontendUrl + "/reset-password?token=" + token;
+            context.setVariable("token", token);
+            context.setVariable("resetLink", resetLink);
+
+            String process = templateEngine.process("reset-password-email", context);
+
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+
+            helper.setText(process, true);
+            helper.setTo(to);
+            helper.setSubject("Resetowanie hasła - GymTrack");
+            helper.setFrom("javaprojectmeil@gmail.com", "gymTrack-noreply");
+
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException | java.io.UnsupportedEncodingException e) {
+            throw new IllegalStateException("Failed to send email");
+        }
+    }
 }

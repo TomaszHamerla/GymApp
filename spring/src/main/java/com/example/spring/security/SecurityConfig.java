@@ -69,6 +69,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                         "/register", "/login", "/activate", "/api/activate",
+                        "/forgot-password", "/api/forgot-password",
+                        "/reset-password", "/api/reset-password",
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
                         "/swagger-ui.html",

@@ -11,3 +11,12 @@ export interface RegisterRequest {
 export interface AuthResponse {
   token: string;
 }
+
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  newPassword: string;
+}

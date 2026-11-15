@@ -40,6 +40,15 @@
               </p-floatLabel>
             </div>
 
+            <div class="forgot-password-row">
+              <button
+                type="button"
+                class="forgot-password-link"
+                (click)="openForgotPasswordDialog()">
+                Zapomniałeś hasła?
+              </button>
+            </div>
+
             <p-button
               label="Zaloguj się"
               icon="pi pi-sign-in"
@@ -104,3 +113,45 @@
     </p-card>
   </div>
 </div>
+
+<p-dialog
+  header="Resetowanie hasła"
+  [(visible)]="showForgotPasswordDialog"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '90%', maxWidth: '420px' }">
+  <p class="dialog-description">
+    Podaj swój adres e-mail przypisany do konta. Wyślemy na niego link umożliwiający ustawienie nowego hasła.
+  </p>
+
+  <div class="field forgot-dialog-field">
+    <p-floatLabel>
+      <input
+        pInputText
+        id="forgot-email"
+        type="email"
+        [(ngModel)]="forgotEmail"
+        (keydown.enter)="onSendResetLink()"
+        class="w-full" />
+      <label for="forgot-email">Adres e-mail</label>
+    </p-floatLabel>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="dialog-footer-actions">
+      <p-button
+        label="Anuluj"
+        icon="pi pi-times"
+        (onClick)="showForgotPasswordDialog = false"
+        severity="secondary"
+        [text]="true" />
+      <p-button
+        label="Wyślij link"
+        icon="pi pi-send"
+        (onClick)="onSendResetLink()"
+        [loading]="forgotLoading"
+        severity="primary" />
+    </div>
+  </ng-template>
+</p-dialog>

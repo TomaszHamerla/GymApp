@@ -1,8 +1,10 @@
 package com.example.spring.controller;
 
 import com.example.spring.dto.AuthResponse;
+import com.example.spring.dto.ForgotPasswordRequest;
 import com.example.spring.dto.LoginRequest;
 import com.example.spring.dto.RegisterRequest;
+import com.example.spring.dto.ResetPasswordRequest;
 import com.example.spring.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -63,5 +65,33 @@ public class AuthController {
     })
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping({"/forgot-password", "/api/forgot-password"})
+    @Operation(
+            summary = "Żądanie zresetowania hasła",
+            description = "Wysyła wiadomość e-mail z unikalnym linkiem umożliwiającym zresetowanie hasła na podany adres e-mail."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Wiadomość z linkiem do zresetowania hasła została wysłana."),
+            @ApiResponse(responseCode = "400", description = "Nieprawidłowy adres e-mail lub użytkownik nie istnieje.")
+    })
+    public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        authService.forgotPassword(request);
+        return ResponseEntity.ok("Link do zresetowania hasła został wysłany na Twój adres e-mail.");
+    }
+
+    @PostMapping({"/reset-password", "/api/reset-password"})
+    @Operation(
+            summary = "Ustawienie nowego hasła",
+            description = "Weryfikuje token resetujący i ustawia nowe hasło dla użytkownika."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Hasło zostało pomyślnie zmienione."),
+            @ApiResponse(responseCode = "400", description = "Nieprawidłowy lub wygasły token albo hasło nie spełnia wymagań.")
+    })
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest request) {
+        authService.resetPassword(request);
+        return ResponseEntity.ok("Hasło zostało pomyślnie zmienione. Możesz się teraz zalogować.");
     }
 }

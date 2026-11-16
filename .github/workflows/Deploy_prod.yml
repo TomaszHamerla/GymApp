@@ -29,7 +29,9 @@ jobs:
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
 
           docker build -t ghcr.io/$OWNER_LC/gymapp-spring:latest ./spring
-          docker build -t ghcr.io/$OWNER_LC/gymapp-angular:latest ./angular
+          docker build \
+            --build-arg COMMIT_SHA="${{ github.sha }}" \
+            -t ghcr.io/$OWNER_LC/gymapp-angular:latest ./angular
 
           docker push ghcr.io/$OWNER_LC/gymapp-spring:latest
           docker push ghcr.io/$OWNER_LC/gymapp-angular:latest

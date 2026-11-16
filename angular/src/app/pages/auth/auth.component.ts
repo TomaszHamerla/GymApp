@@ -16,6 +16,7 @@ import { DialogModule } from 'primeng/dialog';
 
 import { AuthService } from '../../services';
 import { LoginRequest, RegisterRequest } from '../../models';
+import { buildInfo } from '../../../environments/build-info';
 
 @Component({
   selector: 'app-auth',
@@ -38,6 +39,7 @@ import { LoginRequest, RegisterRequest } from '../../models';
   styleUrl: './auth.component.scss'
 })
 export class AuthComponent {
+  readonly buildInfo = buildInfo;
   activeTabIndex = 0;
 
   loginEmail = '';

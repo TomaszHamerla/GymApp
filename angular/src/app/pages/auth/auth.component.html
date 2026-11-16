@@ -111,6 +111,11 @@
         </p-tabPanel>
       </p-tabView>
     </p-card>
+
+    <div class="auth-footer">
+      <span>Build: {{ buildInfo.buildDate }}</span>
+      <span *ngIf="buildInfo.gitCommit" class="build-commit">({{ buildInfo.gitCommit }})</span>
+    </div>
   </div>
 </div>
 

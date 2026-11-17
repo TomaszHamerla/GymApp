@@ -97,6 +97,21 @@
   text-align: center;
 }
 
+.auth-footer {
+  margin-top: 1.25rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.8rem;
+  letter-spacing: 0.3px;
+
+  .build-commit {
+    margin-left: 0.35rem;
+    opacity: 0.85;
+    font-family: monospace;
+    font-size: 0.75rem;
+  }
+}
+
 :host ::ng-deep {
   .p-card {
     border-radius: 12px;
